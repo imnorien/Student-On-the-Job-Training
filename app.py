@@ -90,7 +90,38 @@ class Student(db.Model):
 
 
 
+class AttendanceLog(db.Model):
+    __tablename__ = 'attendance_log'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    student_id: Mapped[int] = mapped_column(ForeignKey('student.id', ondelete='CASCADE'), nullable=False)
+    log_date: Mapped[date] = mapped_column(Date)
+    time_in: Mapped[time] = mapped_column(Time)
+    time_out: Mapped[Optional[time]] = mapped_column(Time, nullable=True)
+    duration_hours: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
+    hours_worked: Mapped[Optional[float]] = mapped_column(Float, nullable=True) 
+    time_in_photo: Mapped[str] = mapped_column(String(200))
+    time_out_photo: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    remarks: Mapped[Optional[str]] = mapped_column(String(200), nullable=True)
+    is_flagged: Mapped[bool] = mapped_column(Boolean, default=False)
 
+    student: Mapped["Student"] = relationship(back_populates="attendance_logs")
+    feedback: Mapped[list["AttendanceRemark"]] = relationship(back_populates="attendance_log")
+
+    def __repr__(self):
+        return f"<AttendanceLog StudentID={self.student_id} Date={self.log_date}>"
+
+    def formatted_duration(self) -> str:
+        if self.duration_hours is None:
+            return "-"
+        hours = int(self.duration_hours)
+        minutes = int(round((self.duration_hours - hours) * 60))
+        return f"{hours} hr{'s' if hours != 1 else ''} {minutes} min{'s' if minutes != 1 else ''}"
+
+    def formatted_time_in(self) -> str:
+        return self.time_in.strftime("%I:%M %p") if self.time_in else "-"
+
+    def formatted_time_out(self) -> str:
+        return self.time_out.strftime("%I:%M %p") if self.time_out else "-"
 
 
 
