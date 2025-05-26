@@ -31,6 +31,20 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 db = SQLAlchemy(app)
 
 
+class Admin(db.Model):
+    __tablename__ = 'admin'
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(100), nullable=False)
+    email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    password: Mapped[str] = mapped_column(String(200), nullable=False)
+    role: Mapped[str] = mapped_column(String(50), default="Admin")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+    announcements: Mapped[list["Announcement"]] = relationship(back_populates="admin")
+    remarks: Mapped[list["AttendanceRemark"]] = relationship(back_populates="reviewer")
+
+    def __repr__(self):
+        return f"<Admin {self.name} ({self.role})>"
 
 
 
@@ -73,7 +87,6 @@ class Student(db.Model):
 
     def full_name(self) -> str:
         return self.name.title()
-
 
 
 
@@ -261,6 +274,29 @@ def delete_view_student(student_id):
 
 
 
+@app.route('/attendance')
+def view_attendance():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash("Please log in as admin first.", "warning")
+        return redirect(url_for('login', role='admin'))
+
+    logs = AttendanceLog.query.order_by(AttendanceLog.log_date.desc()).all()
+    return render_template('attendance_logs.html', logs=logs)
+
+
+@app.route('/attendance_log/edit/<int:log_id>', methods=['POST'])
+def edit_attendance_log(log_id):
+    if 'user_id' not in session or session.get('role') != 'admin':
+        flash("Unauthorized access", "danger")
+        return redirect(url_for('login', role='admin'))
+
+    log = AttendanceLog.query.get_or_404(log_id)
+    log.is_flagged = True if request.form.get('is_flagged') == 'on' else False
+    log.remarks = request.form.get('remarks') or None
+
+    db.session.commit()
+    flash("Attendance log updated.", "success")
+    return redirect(url_for('view_attendance'))
 
 
 
