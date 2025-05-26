@@ -1,0 +1,79 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f8f9fa;
+}
+
+.container {
+    max-width: 960px;
+    margin-top: 50px;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+
+.admin-navbar a {
+    min-width: 150px;
+    text-align: center;
+}
+
+
+.form-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+
+.minimalist-btn {
+    color: #6c757d;      
+    font-weight: 500;
+}
+.minimalist-btn:hover {
+    color: #495057;   
+    background-color: #e9ecef; 
+    border-color: #adb5bd;
+}
+
+
+
+.custom-progress-height {
+  height: 30px;
+}
+
+.progress-bar-width {
+  width: var(--progress-width);
+}
+
+
+
+.custom-progress-height {
+    height: 30px;
+}
+
+.progress-bar-width {
+    transition: width 0.5s ease;
+}
+
+
+.progress-bar-width-0 { width: 0%; }
+.progress-bar-width-1 { width: 1%; }
+.progress-bar-width-2 { width: 2%; }
+.progress-bar-width-3 { width: 3%; }
+.progress-bar-width-4 { width: 4%; }
+.progress-bar-width-5 { width: 5%; }
+.progress-bar-width-6 { width: 6%; }
+.progress-bar-width-7 { width: 7%; }
+.progress-bar-width-8 { width: 8%; }
+.progress-bar-width-9 { width: 9%; }
+.progress-bar-width-10 { width: 10%; }
+.progress-bar-width-11 { width: 11%; }
+.progress-bar-width-12 { width: 12%; }
+.progress-bar-width-100 { width: 100%; }
+
+
+.inline-form {
+    display: inline;
+}

@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Student Profile{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-4 text-center text-primary">Student Profile</h3>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary mx-2">Home</a>
+    </div>
+<div class="container py-5">
+  <div class="card shadow-sm border-0 rounded-4 p-4">
+    <h3 class="mb-4 text-center text-primary">Information</h3>
+    <p class="text-center text-muted mb-4">USN: {{ student.usn }}</p>
+
+
+    <div id="profile-view">
+    <div class="row gy-3">
+        <div class="col-md-6"><strong>Full Name:</strong> {{ student.name }}</div>
+        <div class="col-md-6"><strong>Year Level:</strong> {{ student.status }}</div>
+        <div class="col-md-6"><strong>Program / Course:</strong> {{ student.program }}</div>
+        <div class="col-md-6"><strong>Email:</strong> {{ student.email }}</div>
+    </div>
+    </div>
+
+    <form id="edit-form" method="POST" action="{{ url_for('student_edit_self') }}" class="d-none mt-3">
+    <div class="row g-3">
+        <div class="col-md-6">
+        <label for="usn" class="form-label">USN</label>
+        <input type="text" id="usn" class="form-control" name="usn"
+                value="{{ student.usn }}" title="Enter your student USN"
+                placeholder="e.g., 2023-00123">
+        </div>
+        <div class="col-md-6">
+        <label for="name" class="form-label">Full Name</label>
+        <input type="text" id="name" class="form-control" name="name"
+                value="{{ student.name }}" title="Enter your full name"
+                placeholder="Juan Dela Cruz">
+        </div>
+        <div class="col-md-6">
+        <label for="status" class="form-label">Year Level</label>
+        <input type="text" id="status" class="form-control" name="status"
+                value="{{ student.status }}" title="Enter your year level"
+                placeholder="e.g., 3rd Year">
+        </div>
+        <div class="col-md-6">
+        <label for="program" class="form-label">Program / Course</label>
+        <input type="text" id="program" class="form-control" name="program"
+                value="{{ student.program }}" title="Enter your course or program"
+                placeholder="e.g., BSIT">
+        </div>
+        <div class="col-md-6">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" id="email" class="form-control" name="email"
+                value="{{ student.email }}" title="Enter your email address"
+                placeholder="you@example.com">
+        </div>
+    </div>
+
+    <div class="text-end mt-4">
+        <button type="submit" class="btn btn-primary rounded-pill px-4">Save</button>
+    </div>
+    </form>
+
+
+    <div class="text-end mt-4">
+      <button id="edit-btn" class="btn btn-outline-secondary btn-sm rounded-pill px-3">Edit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById('edit-btn').addEventListener('click', function () {
+    document.getElementById('profile-view').classList.add('d-none');
+    document.getElementById('edit-form').classList.remove('d-none');
+    this.classList.add('d-none');
+  });
+</script>
+{% endblock %}

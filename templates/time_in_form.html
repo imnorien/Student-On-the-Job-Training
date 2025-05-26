@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Time In{% endblock %}
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Time In</h2>
+    <form action="{{ url_for('submit_time_in') }}" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="photo" class="form-label">Upload Photo (required)</label>
+            <input 
+                type="file" 
+                name="photo" 
+                id="photo" 
+                class="form-control" 
+                title="Upload a clear photo for time in verification" 
+                aria-describedby="photoHelp" 
+                required>
+            <div id="photoHelp" class="form-text">Upload a clear, current photo for attendance logging.</div>
+        </div>
+        <button type="submit" class="btn btn-success">Submit Time In</button>
+    </form>
+</div>
+{% endblock %}

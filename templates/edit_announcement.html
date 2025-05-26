@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Edit Announcement{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h3>Edit Announcement</h3>
+  <form method="POST" class="mb-3">
+
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        class="form-control"
+        value="{{ announcement.title }}"
+        placeholder="Enter announcement title"
+        title="Announcement title"
+        required>
+    </div>
+
+    <div class="mb-3">
+      <label for="message" class="form-label">Message</label>
+      <textarea
+        id="message"
+        name="message"
+        class="form-control"
+        rows="4"
+        placeholder="Enter announcement message"
+        title="Announcement message"
+        required>{{ announcement.message }}</textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">Update Announcement</button>
+    <a href="{{ url_for('announcements') }}" class="btn btn-secondary">Cancel</a>
+  </form>
+</div>
+{% endblock %}

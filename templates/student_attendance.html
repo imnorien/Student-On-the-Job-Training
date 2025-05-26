@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Student Attendance</h3>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary mx-2">Home</a>
+    </div>
+
+    <div class="d-flex justify-content-center mb-5 gap-3">
+        <a href="{{ url_for('time_in_form') }}" class="btn btn-success btn-lg d-flex align-items-center gap-1">
+            <i class="bi bi-box-arrow-in-right fs-4"></i> Time In
+        </a>
+    </div>
+
+    <h3 class="mb-3 fw-semibold">Attendance Record</h3>
+
+    <div class="card mb-4 shadow-sm">
+
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">OJT Start Date</h6>
+                <p class="fs-5 fw-bold">
+                    {% if student.start_date %}
+                        {{ student.start_date.strftime("%B %d, %Y") }}
+                    {% else %}
+                        <span class="text-muted">Not set</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row text-center">
+                <div class="col-md-4 border-end">
+                    <h6 class="text-muted">Total Required Hours</h6>
+                    <p class="fs-3 fw-bold">{{ student.required_hours }}</p>
+                </div>
+                <div class="col-md-4 border-end">
+                    <h6 class="text-muted">Total Hours Worked</h6>
+                    <p class="fs-3 fw-bold">{{ student.total_rendered_hours }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-muted">Hours Remaining</h6>
+                    <p class="fs-3 fw-bold">{{ student.remaining_hours() }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Date</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Hours Worked</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if attendance_logs %}
+                            {% for log in attendance_logs %}
+                            <tr class="{% if not log.time_out %}table-warning{% endif %}">
+                                <td>{{ log.log_date.strftime("%B %d, %Y") }}</td>
+                                <td>{{ log.formatted_time_in() }}</td>
+                                <td>
+                                    {% if log.time_out %}
+                                        {{ log.formatted_time_out() }}
+                                    {% else %}
+                                        <span class="text-danger">Pending</span><br>
+                                        <a href="{{ url_for('time_out_form', log_id=log.id) }}" class="btn btn-sm btn-outline-danger mt-1">Time Out</a>
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.formatted_duration() }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center py-3">No attendance records found.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <a href="{{ url_for('attendance_history') }}" 
+        class="btn btn-light border border-secondary d-flex align-items-center gap-2 minimalist-btn">
+            <i class="bi bi-clock-history fs-5"></i> View History
+        </a>
+    </div>
+
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{% endblock %}

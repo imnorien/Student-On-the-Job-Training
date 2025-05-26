@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}OJT Progress{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-semibold">OJT Progress Report</h2>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary mx-2">Home</a>
+    </div>
+
+    <div class="text-center mb-4">
+        <p class="text-muted">Track your current training progress</p>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0 mb-3 text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Start Date</h6>
+                    <p class="fw-bold fs-5 text-dark">
+                        {% if student.start_date %}
+                            {{ student.start_date.strftime("%B %d, %Y") }}
+                        {% else %}
+                            <span class="text-muted">Not set</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4 text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Target Completion Date</h6>
+                    <p class="fw-bold fs-5 text-dark">
+                        {% if student.target_end_date %}
+                            {{ student.target_end_date.strftime("%B %d, %Y") }}
+                        {% else %}
+                            <span class="text-muted">Not set</span>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-3 text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Total Hours Worked</h6>
+                    <p class="display-6 fw-bold text-success">{{ total_hours_worked }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-3 text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Required Hours</h6>
+                    <p class="display-6 fw-bold text-primary">{{ required_hours }}</p>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4 text-center">
+                <div class="card-body">
+                    <h6 class="text-muted">Remaining Hours</h6>
+                    <p class="display-6 fw-bold text-danger">{{ remaining_hours }}</p>
+                </div>
+            </div>
+
+            {% set total_hours_int = (total_hours_worked if total_hours_worked is not none else 0) | round(0, 'floor') %}
+            {% set required_hours_int = (required_hours if required_hours is not none and required_hours > 0 else 1) | round(0, 'ceil') %}
+            {% set progress_percent = (total_hours_int / required_hours_int * 100) | round(0, 'floor') %}
+
+
+            <div class="progress mb-4 custom-progress-height">
+                <div class="progress-bar bg-success progress-bar-width progress-bar-width-{{ progress_percent }}"
+                    role="progressbar"
+                    aria-label="Training Completion">
+                    {{ progress_percent }}%
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <h4 class="mb-3 fw-semibold">Weekly Hours Breakdown</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead class="table-secondary">
+                        <tr>
+                            <th scope="col">Week Starting</th>
+                            <th scope="col">Hours Worked</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for week, hours in weekly_breakdown %}
+                        <tr>
+                            <td>
+                                {% if week %}
+                                    {{ week.strftime("%B %d, %Y") }}
+                                {% else %}
+                                    <span class="text-muted">N/A</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ hours | round(2) }}</td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" class="text-center text-muted">No logs available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Student OJT Portal{% endblock %}
+{% block content %}
+<div class="container mt-6">
+  <div class="d-flex justify-content-end mb-4">
+    <a href="{{ url_for('select_signup') }}" class="btn btn-primary me-2">Sign Up</a>
+    <a href="{{ url_for('select_login') }}" class="btn btn-outline-primary">Log In</a>
+  </div>
+  <h1 class="text-center page-title">Student OJT Portal System</h1>
+</div>
+{% endblock %}

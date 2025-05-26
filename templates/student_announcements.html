@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Announcements{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="mb-4 text-center">Announcements</h3>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-outline-secondary mx-2">Home</a>
+    </div>
+    
+    {% if announcements %}
+        {% for ann in announcements %}
+            <div class="card mb-4 shadow-sm rounded-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ann.title }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        Posted on {{ ann.date_posted.strftime('%B %d, %Y - %I:%M %p') }}
+                    </h6>
+                    <p class="card-text">{{ ann.message }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">No announcements to show.</p>
+    {% endif %}
+</div>
+{% endblock %}

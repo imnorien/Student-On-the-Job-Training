@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="container mt-5">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="text-center mb-4">Register as {{ role|capitalize }}</h2>
+    <a href="{{ url_for('select_signup') }}" class="btn btn-outline-secondary mx-2">Back</a>
+  </div>
+  <form method="POST" action="{{ url_for('register') }}">
+    <input type="hidden" name="role" value="{{ role }}">
+
+    {% if role == 'student' %}
+      <div class="mb-3">
+        <label for="usn" class="form-label">Student USN</label>
+        <input type="text" class="form-control" id="usn" name="usn" placeholder="Enter Student USN" required>
+      </div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label for="name" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="name" name="name" placeholder="Enter full name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+    </div>
+
+    {% if role == 'student' %}
+      <div class="mb-3">
+        <label for="contact_number" class="form-label">Contact Number</label>
+        <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Enter contact number">
+      </div>
+      <div class="mb-3">
+        <label for="program" class="form-label">Program</label>
+        <input type="text" class="form-control" id="program" name="program" placeholder="Enter program enrolled">
+      </div>
+      <div class="mb-3">
+        <label for="required_hours" class="form-label">Required OJT Hours</label>
+        <input type="number" class="form-control" id="required_hours" name="required_hours" placeholder="Enter required hours" min="0">
+      </div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" placeholder="Enter password" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Register</button>
+  </form>
+</div>
+{% endblock %}

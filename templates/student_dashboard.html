@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Student On-the-Job-Training Portal</h2>
+    <p class="text-center">Welcome, {{ student.name }}! Track your OJT progress and stay updated with important announcements.</p>
+
+    <div class="text-center mb-4">
+        <a href="{{ url_for('student_profile') }}" class="btn btn-outline-secondary mx-2">Profile</a>
+        <a href="{{ url_for('student_attendance') }}" class="btn btn-outline-secondary mx-2">Attendance</a>
+        <a href="{{ url_for('student_announcements') }}" class="btn btn-outline-secondary mx-2">Announcements</a>
+        <a href="{{ url_for('ojt_progress') }}" class="btn btn-outline-secondary mx-2">OJT Progress</a>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger mx-2">Log Out</a>
+    </div>
+
+    <div class="mb-5">
+        <h5 class="mb-3">Latest Announcements</h5>
+        {% if latest_announcements %}
+            <div class="row">
+                {% for ann in latest_announcements[:2] %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm rounded-3 h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ ann.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ ann.date_posted.strftime('%B %d, %Y - %I:%M %p') }}</h6>
+                                <p class="card-text">{{ ann.message[:200] }}{% if ann.message|length > 200 %}...{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <div class="text-center">
+                <a href="{{ url_for('student_announcements') }}" class="btn btn-outline-primary">View All Announcements</a>
+            </div>
+        {% else %}
+            <p>No announcements at the moment.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="text-center my-4">
+    <h5>Current Session Timer</h5>
+    <div id="timer" class="fs-4 text-primary"></div>
+</div>
+
+<script>
+(function() {
+    const timeInStr = "{{ time_in.isoformat() if time_in else '' }}";
+    const timeOutStr = "{{ time_out.isoformat() if time_out else '' }}";
+
+    const timerEl = document.getElementById('timer');
+
+    const timeIn = timeInStr ? new Date(timeInStr) : null;
+    const timeOut = timeOutStr ? new Date(timeOutStr) : null;
+
+    function formatDuration(ms) {
+        const hours = Math.floor(ms / 3600000);
+        const minutes = Math.floor((ms % 3600000) / 60000);
+        const seconds = Math.floor((ms % 60000) / 1000);
+        return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    }
+
+    if (window.sessionTimerInterval) {
+        clearInterval(window.sessionTimerInterval);
+    }
+
+    function updateTimer() {
+        const now = new Date();
+
+        if (!timeIn) {
+            timerEl.textContent = "Waiting for Time In...";
+            return;
+        }
+
+        if (timeIn && !timeOut) {
+            const elapsed = now - timeIn;
+            if (elapsed < 0) {
+                timerEl.textContent = "Waiting for Time In...";
+                return;
+            }
+            timerEl.textContent = formatDuration(elapsed);
+        } else if (timeIn && timeOut) {
+            const duration = timeOut - timeIn;
+            if (duration < 0) {
+                timerEl.textContent = "Invalid time data.";
+                return;
+            }
+            timerEl.textContent = "Session completed: " + formatDuration(duration);
+            clearInterval(window.sessionTimerInterval);
+        }
+    }
+
+    window.sessionTimerInterval = setInterval(updateTimer, 1000);
+    updateTimer();
+})();
+</script>
+
+{% endblock %}

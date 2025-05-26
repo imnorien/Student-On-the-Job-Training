@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Time Out{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Time Out for {{ log.log_date.strftime("%B %d, %Y") }}</h2>
+
+    <form action="{{ url_for('submit_time_out', log_id=log.id) }}" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="photo" class="form-label">Upload Photo (required)</label>
+            <input 
+                type="file" 
+                name="photo" 
+                id="photo" 
+                class="form-control" 
+                title="Upload a clear photo for time out verification" 
+                aria-describedby="photoHelp" 
+                required>
+            <div id="photoHelp" class="form-text">Upload a clear, current photo to log your time out.</div>
+        </div>
+        <button type="submit" class="btn btn-danger">Submit Time Out</button>
+        <a href="{{ url_for('student_attendance') }}" class="btn btn-secondary ms-2">Cancel</a>
+    </form>
+</div>
+{% endblock %}

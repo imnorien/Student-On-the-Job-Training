@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>All Student Records</h3>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary mx-2">Home</a>
+    </div>
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Student USN</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Program</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.usn }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.program }}</td>
+                <td>{{ student.status }}</td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editStudentModal{{ student.id }}">
+                            Edit
+                        </button>
+
+                        <form method="POST" action="{{ url_for('delete_view_student', student_id=student.id) }}" class="inline-form" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+
+            <div class="modal fade" id="editStudentModal{{ student.id }}" tabindex="-1" aria-labelledby="editStudentModalLabel{{ student.id }}" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form method="POST" action="{{ url_for('edit_student', student_id=student.id) }}">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editStudentModalLabel{{ student.id }}">Edit Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="name{{ student.id }}" class="form-label">Name</label>
+                                    <input type="text" name="name" class="form-control" id="name{{ student.id }}" value="{{ student.name }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email{{ student.id }}" class="form-label">Email</label>
+                                    <input type="email" name="email" class="form-control" id="email{{ student.id }}" value="{{ student.email }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="program{{ student.id }}" class="form-label">Program</label>
+                                    <input type="text" name="program" class="form-control" id="program{{ student.id }}" value="{{ student.program }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="status{{ student.id }}" class="form-label">Status</label>
+                                    <select name="status" id="status{{ student.id }}" class="form-select">
+                                        <option value="Ongoing" {% if student.status == 'Ongoing' %}selected{% endif %}>Ongoing</option>
+                                        <option value="Completed" {% if student.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                        <option value="Dropped" {% if student.status == 'Dropped' %}selected{% endif %}>Dropped</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+
+
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}
